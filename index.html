@@ -9,15 +9,15 @@
 <h2 data-i18n="title">Jquery i18n demo</h2>
 <hr>
 <select name="" id="language-toggle">
-    <option value="en">英文</option>
     <option value="zh">中文</option>
-    <option value="zh">葡萄牙文</option>
+    <option value="en">英文</option>
+    <option value="pt">葡萄牙文</option>
 </select>
 <hr>
 <div data-i18n="content">
     这里是demo的内容
 </div>
-
+<input type="text" placeholder="这是placeholder" data-i18n="[placeholder]input">
 
 
 
@@ -26,21 +26,29 @@
 <script src="https://cdn.bootcss.com/i18next-locize-backend/1.0.0/i18nextLocizeBackend.min.js"></script>
 <script src="https://cdn.bootcss.com/jquery-i18next/1.2.0/jquery-i18next.min.js"></script>
 <script>
-    i18next.use(i18nextLocizeBackend).init({
-        fallbackLng: 'en',
-        //debug: true,
-        ns: ['index'],//这里可以引用多个json文件，如 ['index', 'common'] 就是index.json、common.json
-        defaultNS: 'index', //对应的i18n文件夹中的index.json文件
-        backend: {
-            loadPath: './i18n/{{lng}}/{{ns}}.json' //加载对应的语言包和文件 如 ./i18n/en/index.json
-        }
-    }, function(err, t){
-        console.log(t);
-        jqueryI18next.init(t, $);
+    function initLanguage(lng) {
+        i18next.use(i18nextLocizeBackend).init({
+            fallbackLng: lng,
+            //debug: true,
+            ns: ['index'],//这里可以引用多个json文件，如 ['index', 'common'] 就是index.json、common.json
+            defaultNS: 'index', //对应的i18n文件夹中的index.json文件
+            backend: {
+                loadPath: './i18n/{{lng}}/{{ns}}.json' //加载对应的语言包和文件 如 ./i18n/en/index.json
+            }
+        }, function(err, t){
+            console.log(t);
+            jqueryI18next.init(i18next, $);
 
-        $('[data-i18n]').i18n();
+            $('[data-i18n]').localize();
+        });
+    }
+
+    var lng = navigator.language.toLocaleLowerCase().split('-')[0];
+    initLanguage(lng);
+    $('#language-toggle').change(function () {
+
+        initLanguage($(this).val())
     });
-
 </script>
 </body>
 </html>
